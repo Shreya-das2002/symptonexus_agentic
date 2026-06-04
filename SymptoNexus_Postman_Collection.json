@@ -1,0 +1,210 @@
+{
+  "info": {
+    "_postman_id": "7f3a3d2a-9d16-4c9b-8f1f-2b2b8b8c1001",
+    "name": "SymptoNexus API Collection",
+    "description": "Postman collection for SymptoNexus doctor-patient booking and symptom check APIs",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/health",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "health"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Specializations",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/specializations",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "specializations"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Search Doctors by Category",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/doctors/search?category=skin",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "doctors",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "category",
+              "value": "skin"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Search Doctors by Specialization",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/doctors/search?specialization=Dermatologist",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "doctors",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "specialization",
+              "value": "Dermatologist"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Search Doctors by Query",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/doctors/search?query=Rahul",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "doctors",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "query",
+              "value": "Rahul"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Symptom Check - Skin",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"message\": \"I have itching and red rashes on my skin\",\n  \"conversation\": []\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/chat/symptom-check",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "chat",
+            "symptom-check"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Symptom Check - Diabetes",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"message\": \"I feel very tired and my sugar level is high\",\n  \"conversation\": []\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/chat/symptom-check",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "chat",
+            "symptom-check"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Symptom Check - Child Fever",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"message\": \"My child has fever and cough\",\n  \"conversation\": []\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/chat/symptom-check",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "chat",
+            "symptom-check"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
