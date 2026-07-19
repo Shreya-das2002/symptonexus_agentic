@@ -1,4 +1,4 @@
-from sqlalchemy import String, and_, func, or_
+from sqlalchemy import and_, func, or_
 from sqlalchemy.orm import Session
 
 from app.models import Doctor, DoctorDetail, DoctorSpecialization, DomainLookup
@@ -76,7 +76,10 @@ class DoctorService:
                 DoctorDetail.experience,
                 DoctorDetail.sort_desc,
                 DoctorDetail.gender,
-                func.group_concat(func.distinct(DomainLookup.domain_name)).label("specializations"),
+                func.string_agg(
+                    func.distinct(DomainLookup.domain_name),
+                    ",",
+                ).label("specializations"),
             )
             .outerjoin(DoctorDetail, Doctor.doctor_id == DoctorDetail.doctor_id)
             .outerjoin(DoctorSpecialization, Doctor.doctor_id == DoctorSpecialization.doctor_id)
@@ -84,7 +87,7 @@ class DoctorService:
                 DomainLookup,
                 and_(
                     DomainLookup.domain_type == "specialization",
-                    DomainLookup.domain_value == func.cast(DoctorSpecialization.specialization_id, String),
+                    DomainLookup.domain_value == DoctorSpecialization.specialization_id,
                 ),
             )
             .group_by(
@@ -102,7 +105,7 @@ class DoctorService:
         )
 
         filters = [
-            DoctorSpecialization.status == "1",
+            DoctorSpecialization.status == 1,
             Doctor.status == "Active",
         ]
 
@@ -143,7 +146,7 @@ class DoctorService:
                     "status": row.status,
                     "experience": row.experience,
                     "short_desc": row.sort_desc,
-                    "gender": row.gender,
+                    "gender": str(row.gender) if row.gender is not None else None,
                     "specialization": specializations,
                 }
             )

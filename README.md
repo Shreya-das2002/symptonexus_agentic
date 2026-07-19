@@ -4,28 +4,22 @@ A Python FastAPI backend for your **doctor–patient booking platform** with an 
 
 ## What this backend does
 
-1. Connects to your local MySQL database:
-   - host: `localhost`
-   - user: `root`
-   - password: `root`
-   - db: `symptonexus`
+1. Connects to a PostgreSQL database through `DATABASE_URL`
 2. Reads doctor specialization from `domain_lookups`
 3. Reads doctor profile data from:
    - `doctors`
    - `doctor_details`
    - `doctor_specializations`
-4. Runs a **local LLM via Ollama**
+4. Calls the configured **Qwen chat API**
 5. Uses an **agent loop with tools** so the model can:
    - infer symptom intent
    - map symptoms to specialization
    - search matching doctors from DB
    - respond politely and safely
 
-## Recommended offline model
+## Model
 
-Default model in this project: `qwen2.5:3b`
-
-You can change this in `.env`.
+Default model: `qwen3.6:27b`. You can change the endpoint, API key, model, and timeout in `.env`.
 
 ## Install
 
@@ -37,20 +31,13 @@ source .venv/bin/activate   # Linux / macOS
 pip install -r requirements.txt
 ```
 
-## Start Ollama
-
-Install and run Ollama locally, then pull a model:
-
-```bash
-ollama pull qwen2.5:3b
-ollama serve
-```
-
 ## Configure env
 
 ```bash
 cp .env.example .env
 ```
+
+Set `QWEN_API_KEY` in `.env` to the bearer token provided by your Qwen API service. Do not commit this token.
 
 ## Run API
 

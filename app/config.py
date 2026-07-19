@@ -7,15 +7,12 @@ class Settings(BaseSettings):
     app_host: str = "0.0.0.0"
     app_port: int = 8000
 
-    mysql_host: str = "localhost"
-    mysql_port: int = 3306
-    mysql_user: str = "root"
-    mysql_password: str = "root"
-    mysql_db: str = "symptonexus"
+    database_url: str = ""
 
-    ollama_base_url: str = "http://localhost:11434"
-    ollama_model: str = "qwen2.5:1.5b"
-    ollama_timeout: int = 90
+    qwen_api_url: str = "http://qwen.msqube.in/api/chat"
+    qwen_api_key: str = ""
+    qwen_model: str = "qwen3.6:27b"
+    qwen_timeout: int = 90
 
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -25,10 +22,15 @@ class Settings(BaseSettings):
 
     @property
     def sqlalchemy_database_uri(self) -> str:
-        return (
-            f"mysql+pymysql://{self.mysql_user}:{self.mysql_password}"
-            f"@{self.mysql_host}:{self.mysql_port}/{self.mysql_db}"
-        )
+        if not self.database_url:
+            raise ValueError("DATABASE_URL is not configured")
+
+        # The PostgreSQL URL commonly supplied by hosting providers omits the
+        # SQLAlchemy driver name. Use psycopg (v3) explicitly for this app.
+        if self.database_url.startswith("postgresql://"):
+            return self.database_url.replace("postgresql://", "postgresql+psycopg://", 1)
+
+        return self.database_url
 
 
 settings = Settings()

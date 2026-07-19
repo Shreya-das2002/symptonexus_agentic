@@ -379,9 +379,10 @@ class SymptomAgent:
     def __init__(self, db: Session):
         self.db = db
         self.doctor_service = DoctorService(db)
-        self.base_url = settings.ollama_base_url.rstrip("/")
-        self.model = settings.ollama_model
-        self.timeout = settings.ollama_timeout
+        self.api_url = settings.qwen_api_url
+        self.api_key = settings.qwen_api_key
+        self.model = settings.qwen_model
+        self.timeout = settings.qwen_timeout
 
     def is_greeting(self, message: str) -> bool:
         msg = message.lower().strip()
@@ -400,21 +401,21 @@ class SymptomAgent:
     def is_empty_or_invalid(self, message: str) -> bool:
         return not message or not message.strip()
 
-    def _call_local_llm(self, messages: list[dict[str, Any]]) -> dict[str, Any]:
+    def _call_qwen_api(self, messages: list[dict[str, Any]]) -> dict[str, Any]:
         payload = {
             "model": self.model,
             "messages": messages,
             "stream": False,
-            "format": "json",
-            "options": {
-                "temperature": 0,
-                "num_predict": 80,
-            },
+            "think": False,
         }
 
+        if not self.api_key:
+            raise RuntimeError("QWEN_API_KEY is not configured")
+
         response = requests.post(
-            f"{self.base_url}/api/chat",
+            self.api_url,
             json=payload,
+            headers={"Authorization": f"Bearer {self.api_key}"},
             timeout=self.timeout,
         )
         response.raise_for_status()
@@ -514,7 +515,7 @@ class SymptomAgent:
 
         messages.append({"role": "user", "content": user_message})
 
-        llm_response = self._call_local_llm(messages)
+        llm_response = self._call_qwen_api(messages)
         content = llm_response.get("message", {}).get("content", "{}")
 
         specialization = None

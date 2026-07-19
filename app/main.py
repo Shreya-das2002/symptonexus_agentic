@@ -32,7 +32,7 @@ def health():
             "app": settings.app_name,
             "environment": settings.app_env,
             "database": "connected",
-            "ollama_model": settings.ollama_model,
+            "qwen_model": settings.qwen_model,
         }
     finally:
         db.close()
